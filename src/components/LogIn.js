@@ -1,17 +1,16 @@
 import { Button, Form, Card } from "react-bootstrap";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useRef } from "react";
 import { validateEmailAndPassword } from "../utils/validation";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   updateProfile,
-  onAuthStateChanged,
 } from "firebase/auth";
 import { auth } from "../utils/firebase";
-import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { addUser, removeUser } from "../utils/userSlice";
+import { addUser } from "../utils/userSlice";
+import Header from "./Header";
 
 const LogIn = () => {
   const [errorMessage, setErrorMessage] = useState();
@@ -19,21 +18,7 @@ const LogIn = () => {
   const email = useRef(null);
   const name = useRef(null);
   const password = useRef(null);
-  const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        const { uid, displayName, email } = user;
-        dispatch(addUser({ uid: uid, displayName: displayName, email: email }));
-        navigate("/body");
-      } else {
-        dispatch(removeUser);
-        navigate("/");
-      }
-    });
-  }, []);
 
   const handelClick = () => {
     const message = validateEmailAndPassword(
@@ -98,6 +83,7 @@ const LogIn = () => {
 
   return (
     <div className="w-4/12 my-5 right-0 left-0 mx-auto">
+      <Header />
       <Card>
         <Card.Body>
           <h2 className="font-bold text-3xl">
